@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Movement - Inventory Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-edit"></i> Edit Movement: {{ movement.movement_id }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-info-circle"></i> Movement Types:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Stock In:</strong> Leave "From Location" empty, select "To Location"</li>
+                        <li><strong>Stock Out:</strong> Select "From Location", leave "To Location" empty</li>
+                        <li><strong>Transfer:</strong> Select both "From Location" and "To Location"</li>
+                    </ul>
+                </div>
+                
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.movement_id.label(class="form-label") }}
+                        {{ form.movement_id(class="form-control", readonly=true) }}
+                        <small class="form-text text-muted">Movement ID cannot be changed</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.product_id.label(class="form-label") }}
+                        {{ form.product_id(class="form-control") }}
+                        {% if form.product_id.errors %}
+                            <div class="text-danger">
+                                {% for error in form.product_id.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.from_location.label(class="form-label") }}
+                                {{ form.from_location(class="form-control") }}
+                                {% if form.from_location.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.from_location.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Leave empty for stock in</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.to_location.label(class="form-label") }}
+                                {{ form.to_location(class="form-control") }}
+                                {% if form.to_location.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.to_location.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Leave empty for stock out</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.qty.label(class="form-label") }}
+                                {{ form.qty(class="form-control") }}
+                                {% if form.qty.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.qty.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.timestamp.label(class="form-label") }}
+                                {{ form.timestamp(class="form-control") }}
+                                {% if form.timestamp.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.timestamp.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('movements') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Movements
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save"></i> Update Movement
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

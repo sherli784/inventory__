@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Amazon Warehouse{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .btn {
+            border-radius: 5px;
+        }
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .alert {
+            border-radius: 10px;
+        }
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-boxes-stacked"></i> Amazon Warehouse
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-cubes"></i> Products
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('products') }}">View All Products</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('add_product') }}">Add Product</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="locationsDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-map-location-dot icon-location"></i> Locations
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('locations') }}">View All Locations</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('add_location') }}">Add Location</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="movementsDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-right-left"></i> Movements
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('movements') }}">View All Movements</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('add_movement') }}">Add Movement</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('balance_report') }}">
+                            <i class="fas fa-chart-column"></i> Balance Report
+                        </a>
+                    </li>
+                </ul>
+                <div class="ms-auto d-flex align-items-center gap-3">
+                    <div class="text-white-50 small d-none d-lg-block">Theme</div>
+                    <div class="form-check form-switch m-0">
+                        <input class="form-check-input" type="checkbox" id="themeSwitch" aria-label="Toggle dark mode">
+                        <label class="form-check-label text-white" for="themeSwitch">
+                            <i class="fas fa-moon"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Decorative background accents -->
+    <div class="decorative-element deco-1"></div>
+    <div class="decorative-element deco-2"></div>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function() {
+            const root = document.documentElement;
+            // Theme (light/dark)
+            const storedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initialTheme = storedTheme || (prefersDark ? 'dark' : 'light');
+            if (initialTheme === 'dark') root.setAttribute('data-theme', 'dark');
+            const switchEl = document.getElementById('themeSwitch');
+            if (switchEl) {
+                switchEl.checked = initialTheme === 'dark';
+                switchEl.addEventListener('change', function() {
+                    const mode = this.checked ? 'dark' : 'light';
+                    if (mode === 'dark') root.setAttribute('data-theme', 'dark');
+                    else root.removeAttribute('data-theme');
+                    localStorage.setItem('theme', mode);
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

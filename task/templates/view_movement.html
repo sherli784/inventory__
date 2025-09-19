@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Movement {{ movement.movement_id }} - Inventory Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-exchange-alt"></i> Movement Details</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="30%">Movement ID:</th>
+                        <td><strong>{{ movement.movement_id }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Date/Time:</th>
+                        <td>{{ movement.timestamp.strftime('%B %d, %Y at %I:%M %p') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Product:</th>
+                        <td>
+                            <a href="{{ url_for('view_product', product_id=movement.product_id) }}" class="text-decoration-none">
+                                {{ movement.product_id }}
+                                {% if movement.product %}
+                                    - {{ movement.product.name }}
+                                {% endif %}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>From Location:</th>
+                        <td>
+                            {% if movement.from_location %}
+                                <a href="{{ url_for('view_location', location_id=movement.from_location) }}" class="text-decoration-none">
+                                    {{ movement.from_location }}
+                                    {% if movement.from_loc %}
+                                        - {{ movement.from_loc.name }}
+                                    {% endif %}
+                                </a>
+                            {% else %}
+                                <span class="text-muted">External Source</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>To Location:</th>
+                        <td>
+                            {% if movement.to_location %}
+                                <a href="{{ url_for('view_location', location_id=movement.to_location) }}" class="text-decoration-none">
+                                    {{ movement.to_location }}
+                                    {% if movement.to_loc %}
+                                        - {{ movement.to_loc.name }}
+                                    {% endif %}
+                                </a>
+                            {% else %}
+                                <span class="text-muted">External Destination</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Quantity:</th>
+                        <td>
+                            <span class="badge bg-{{ 'success' if movement.to_location and not movement.from_location else 'warning' if movement.from_location and movement.to_location else 'danger' }} fs-6">
+                                {{ movement.qty }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Movement Type:</th>
+                        <td>
+                            {% if movement.to_location and not movement.from_location %}
+                                <span class="badge bg-success">Stock In</span>
+                            {% elif movement.from_location and movement.to_location %}
+                                <span class="badge bg-warning">Transfer</span>
+                            {% elif movement.from_location and not movement.to_location %}
+                                <span class="badge bg-danger">Stock Out</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('edit_movement', movement_id=movement.movement_id) }}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit Movement
+                    </a>
+                    <a href="{{ url_for('movements') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Movements
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
